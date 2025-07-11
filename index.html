@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XOR String Encryptor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%; /* Make container responsive */
+            max-width: 500px; /* Limit max width */
+        }
+        input[type="password"] {
+            padding: 8px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: calc(100% - 18px); /* Adjust width for padding/border */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+        button {
+            padding: 10px 15px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%; /* Make button responsive */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #originalStringDisplay, #output {
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            word-wrap: break-word;
+            max-width: 100%;
+            text-align: left;
+            background-color: #e9e9e9;
+            padding: 10px;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉מזל טוב🎉</h1>
+        <h2>קיבלתם שובר לישרוטל על סך 1992 ש״ח</h2>
+        <label for="passphrase">Enter Passphrase:</label><br>
+        <input type="text" id="passphrase" name="passphrase">
+        <button onclick="xorString()">Submit</button>
+        <p>Cupon Codes:</p>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        const originalBase64String = "Q11AXVheVldQXwgKDwp4W0ZWWFFXVVBfBAkIAnheRlFVXVhUUEAcDwAGRw==";
+
+        // Function to decode Base64 string to a regular string
+        function decodeBase64(base64String) {
+            try {
+                // Atob decodes a base-64 encoded string.
+                return atob(base64String);
+            } catch (e) {
+                console.error("Error decoding Base64 string:", e);
+                return ""; // Return empty string on error
+            }
+        }
+
+        function xorString() {
+            const passphrase = document.getElementById('passphrase').value;
+            let result = "";
+
+            if (passphrase.length === 0) {
+                // Using a simple div for messages instead of alert()
+                document.getElementById('output').textContent = "Please enter a passphrase.";
+                document.getElementById('output').style.color = "red";
+                return;
+            } else {
+                document.getElementById('output').style.color = "black"; // Reset color
+            }
+
+            // Decode the Base64 string first
+            const decodedOriginalString = decodeBase64(originalBase64String);
+
+            if (!decodedOriginalString) {
+                document.getElementById('output').textContent = "Error: Could not decode the Base64 string.";
+                document.getElementById('output').style.color = "red";
+                return;
+            }
+
+            // Perform XOR operation on the decoded string
+            for (let i = 0; i < decodedOriginalString.length; i++) {
+                const originalCharCode = decodedOriginalString.charCodeAt(i);
+                const passphraseCharCode = passphrase.charCodeAt(i % passphrase.length);
+                const xoredCharCode = originalCharCode ^ passphraseCharCode;
+                result += String.fromCharCode(xoredCharCode);
+            }
+
+            document.getElementById('output').textContent = result;
+        }
+    </script>
+</body>
+</html>
